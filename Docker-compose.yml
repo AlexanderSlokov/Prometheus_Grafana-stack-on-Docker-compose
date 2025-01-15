@@ -13,9 +13,9 @@ services:
       - cadvisor:cadvisor
       - node-exporter:node-exporter
     command:
-      - '-config.file=/etc/prometheus/prometheus.yml'
-      - '-storage.local.path=/prometheus'
-      - '-alertmanager.url=http://alertmanager:9093'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
     networks:
       - monitoring
     restart: unless-stopped
