@@ -1,0 +1,17 @@
+# Ignore all contents of the directories
+grafana_data/*
+prometheus_data/*
+ssl/*
+
+# But keep the directories
+!grafana_data/
+!prometheus_data/
+!ssl/
+
+# Ignore sensitive configuration files
+.env
+ssl/*.crt
+ssl/*.key
+
+# Ignore Docker-related files
+docker-compose.override.yml
