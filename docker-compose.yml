@@ -91,15 +91,25 @@ services:
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor
-    environment:
-      - DOCKER_HOST=${CADVISOR_DOCKER_HOST}
+    # Use socket Unix instead of TCP, but most of the time cAdvisor do not need Docker socket.
+    #environment:
+      #- DOCKER_HOST=unix:///var/run/docker.sock
+      #- DOCKER_HOST=${CADVISOR_DOCKER_HOST}
     ports:
       - "127.0.0.1:8080:8080"
     volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
+      #- /mnt/wsl/docker-desktop:/var/lib/docker:ro
+      #- /mnt/wsl/docker-desktop-bind-mounts/Ubuntu:/var/lib/docker:ro   # Mount docker-desktop integration directory on WSL 2
+      - /var/run/docker.sock:/var/run/docker.sock:ro                    # Mount file socket Docker
+      - /:/rootfs:ro                                                    # Mount system
       - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
+
+    # If you can not see detail of the container, you may want to add cAdvisor's user to Docker Group.
+    # user: "0:1001"
+    # user: "root"
+    # user: "0:0"
+    command:
+      - '--docker_only=false'  # Hạn chế chỉ giám sát Docker
     networks:
       - monitoring
     restart: unless-stopped
